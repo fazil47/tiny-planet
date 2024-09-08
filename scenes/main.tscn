@@ -1,0 +1,129 @@
+[gd_scene load_steps=19 format=3 uid="uid://btr2aagv4boqt"]
+
+[ext_resource type="Shader" path="res://shaders/sky.gdshader" id="1_n65nk"]
+[ext_resource type="Script" path="res://simple_freelook_camera/camera.gd" id="2_kqdo0"]
+[ext_resource type="PackedScene" uid="uid://d1fvdnlbcvcyq" path="res://scenes/grass_shells.tscn" id="2_x2n7i"]
+[ext_resource type="Script" path="res://scripts/cannon.gd" id="3_dt7sn"]
+[ext_resource type="Script" path="res://scripts/planet.gd" id="3_jygwd"]
+[ext_resource type="PackedScene" uid="uid://5rs0r757b0vj" path="res://scenes/water_shells.tscn" id="3_tvwug"]
+[ext_resource type="Material" uid="uid://cw3gj6ga1rd23" path="res://materials/water_bed.material" id="4_oktcc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tl0y5"]
+metallic_specular = 0.0
+roughness = 0.0
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+disable_receive_shadows = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_ho4aa"]
+material = SubResource("StandardMaterial3D_tl0y5")
+radius = 100.0
+height = 200.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fhkuw"]
+shader = ExtResource("1_n65nk")
+shader_parameter/sky_color = Color(0.03, 0.05, 0.11, 1)
+shader_parameter/star_base_color = Color(1, 1, 1, 1)
+shader_parameter/star_hue_offset = 0.6
+shader_parameter/star_intensity = 0.08
+shader_parameter/star_twinkle_speed = 0.8
+shader_parameter/star_twinkle_intensity = 0.2
+shader_parameter/layer_scale = 20.0
+shader_parameter/layer_scale_step = 10.0
+shader_parameter/layers_count = 3
+
+[sub_resource type="Sky" id="Sky_b45xc"]
+sky_material = SubResource("ShaderMaterial_fhkuw")
+process_mode = 2
+
+[sub_resource type="Environment" id="Environment_47g1x"]
+background_mode = 2
+sky = SubResource("Sky_b45xc")
+tonemap_mode = 3
+glow_enabled = true
+fog_light_color = Color(1, 1, 1, 1)
+fog_light_energy = 0.19
+volumetric_fog_enabled = true
+
+[sub_resource type="FogMaterial" id="FogMaterial_aexud"]
+density = 2.0551
+emission = Color(0.0923971, 0.0923971, 0.0923971, 1)
+edge_fade = 0.565685
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3tpbe"]
+radius = 8.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_x3ffy"]
+material = ExtResource("4_oktcc")
+radius = 8.0
+height = 16.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gakw2"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_j8rfv"]
+
+[sub_resource type="FogMaterial" id="FogMaterial_2droi"]
+density = -1.0
+
+[node name="Main" type="Node3D"]
+metadata/_edit_lock_ = true
+
+[node name="SunLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.0958457, -0.716028, 0.69146, 0, 0.694658, 0.71934, -0.995396, 0.0689456, -0.06658, 0, 1092.28, -1122.83)
+shadow_enabled = true
+directional_shadow_mode = 0
+
+[node name="Sun" type="MeshInstance3D" parent="SunLight"]
+cast_shadow = 0
+mesh = SubResource("SphereMesh_ho4aa")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_47g1x")
+
+[node name="PlanetAtmosphere" type="FogVolume" parent="."]
+transform = Transform3D(0.999806, 0, 0, 0, 0.999994, 0, 0, 0, 0.999806, 0, 0, 0)
+size = Vector3(21, 20, 20)
+shape = 0
+material = SubResource("FogMaterial_aexud")
+
+[node name="Planet" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.974332, 0, -0.223616, 0, 1, 0, 0.223616, 0, -0.974332, 0, 0, 0)
+script = ExtResource("3_jygwd")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Planet"]
+shape = SubResource("SphereShape3D_3tpbe")
+metadata/_edit_lock_ = true
+
+[node name="GrassShells" parent="Planet" instance=ExtResource("2_x2n7i")]
+base_radius = 8.0
+gap = 0.02
+metadata/_edit_lock_ = true
+
+[node name="WaterShells" parent="Planet" instance=ExtResource("3_tvwug")]
+base_radius = 7.99
+gap = 0.04
+metadata/_edit_lock_ = true
+
+[node name="PlanetBase" type="MeshInstance3D" parent="Planet"]
+mesh = SubResource("SphereMesh_x3ffy")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.993069, 0.014833, -0.116598, 0, 0.992005, 0.126198, 0.117538, 0.125323, -0.985129, -1.73439, 1.7305, -14.4896)
+script = ExtResource("2_kqdo0")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -32)
+visible = false
+script = ExtResource("3_dt7sn")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("SphereShape3D_gakw2")
+
+[node name="Cannon" type="MeshInstance3D" parent="RigidBody3D"]
+mesh = SubResource("SphereMesh_j8rfv")
+skeleton = NodePath("../..")
+
+[node name="NegativeFog" type="FogVolume" parent="."]
+shape = 4
+material = SubResource("FogMaterial_2droi")

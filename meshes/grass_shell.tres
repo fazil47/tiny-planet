@@ -1,0 +1,8 @@
+[gd_resource type="SphereMesh" load_steps=2 format=3 uid="uid://bo7g5qxa5tk3m"]
+
+[ext_resource type="Material" uid="uid://dvrdp4ws50ead" path="res://materials/short_grass.material" id="1_8317i"]
+
+[resource]
+material = ExtResource("1_8317i")
+radius = 8.0
+height = 16.0

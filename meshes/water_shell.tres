@@ -1,0 +1,10 @@
+[gd_resource type="SphereMesh" load_steps=2 format=3 uid="uid://kodhfli0k5nk"]
+
+[ext_resource type="Material" uid="uid://b1whcrvfypufe" path="res://materials/water.material" id="1_wccpu"]
+
+[resource]
+material = ExtResource("1_wccpu")
+radius = 7.99
+height = 15.98
+radial_segments = 1024
+rings = 512
