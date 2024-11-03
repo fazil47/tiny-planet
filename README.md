@@ -2,5 +2,4 @@
 
 Made with Godot 4.3
 
-The grass shader uses shell texturing and both the grass and water shaders use
-triplaner noise.
+A tiny planet made with Godot, the shell textured grass shader and water shader use triplaner noise.
