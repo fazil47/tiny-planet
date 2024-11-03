@@ -2,4 +2,5 @@
 
 Made with Godot 4.3
 
-https://github.com/user-attachments/assets/06c0bafa-42c9-4e0f-a922-aa2693b59a04
+The grass shader uses shell texturing and both the grass and water shaders use
+triplaner noise.
